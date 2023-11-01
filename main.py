@@ -1,29 +1,27 @@
-import time
+import glob
 
 from game import Game, Point
 
 
 def main():
-    g = Game()
-    g.read_input("testcases/test01.txt")
 
-    g.describe()
+    totalscore = 0
 
-    while True:
-        start = time.time()
+    for file in glob.iglob("testcases/*.txt"):
+        g = Game()
+        g.read_input(file)
+        # g.describe()
 
-        action = Point(8250, 4500)
-        score = g.play_action(action)
+        while True:
+            action = Point(8250, 4500)
+            is_over = g.play_action(action)
 
-        print(f"Score: {score}")
+            if is_over:
+                totalscore += g.score
+                break
+        print(file, g.score)
 
-        g.describe()
-
-        end = time.time()
-        print(f"Time: {end - start}")
-
-        if g.is_game_over() or g.is_victory():
-            break
+    print(totalscore)
 
 
 if __name__ == "__main__":

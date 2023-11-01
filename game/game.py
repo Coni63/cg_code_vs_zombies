@@ -49,13 +49,19 @@ class Game:
             return True
 
         for zombie in self.zombies:
+            if not zombie.alive:
+                continue
             zombie.set_target(self.ash, *self.humans)
             zombie.move_toward(zombie.target, 400)
 
         self.ash.move_toward(action, 1000)
-        self.score += self.ash.kill_zombies(self.zombies, len(self.humans))
+
+        alive_count = len([x for x in self.humans if x.alive])
+        self.score += self.ash.kill_zombies(self.zombies, alive_count)
 
         for zombie in self.zombies:
+            if not zombie.alive:
+                continue
             if zombie.target == zombie:
                 zombie.target.kill()
 
@@ -64,17 +70,17 @@ class Game:
             return True
         if self.is_victory():
             return True
-
+        
         return False
 
     def describe(self):
         print(f"\nGame = {self.score} pts")
         print(f"{len(self.humans)} humans & {len(self.zombies)} zombies")
         print(f"Ash    : ({self.ash.x}, {self.ash.y})")
-        for zombie in self.zombies:
-            print(f"Zombie : ({zombie.x}, {zombie.y})")
         for human in self.humans:
-            print(f"Human  : ({human.x}, {human.y})")
+            print(f"Human  : ({human.x}, {human.y}) - {human.alive}")
+        for zombie in self.zombies:
+            print(f"Zombie : ({zombie.x}, {zombie.y}) - {zombie.alive}")
 
     def is_game_over(self) -> bool:
         return all(not x.alive for x in self.humans)

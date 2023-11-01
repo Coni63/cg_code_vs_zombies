@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 
 from typing import Generator
 
@@ -28,6 +29,8 @@ class Unit(Point):
         d = float("inf")
 
         for unit in units:
+            if not unit.alive:
+                continue
             current_distance = self.distance2(unit)
 
             if current_distance < d:
@@ -42,14 +45,16 @@ class Unit(Point):
             self.y = p.y
         else:
             vector.setNorm(range)
-            vector.round()
-            self.x += vector.x
-            self.y += vector.y
+            self.x = math.trunc(self.x + vector.x)
+            self.y = math.trunc(self.y + vector.y)
 
     def kill_zombies(self, zombies: list[Unit], human_alive: int) -> int:
         score = 0
         factors = self.fibonacci()
         for zombie in zombies:
+            if not zombie.alive:
+                continue
+
             if self.distance2(zombie) < 4000000:
                 zombie.kill()
                 factor = next(factors)

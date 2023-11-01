@@ -36,10 +36,6 @@ class Point:
     def clone(self):
         return Point(self.x, self.y)
 
-    def round(self):
-        self.x = math.trunc(self.x)
-        self.y = math.trunc(self.y)
-
     def __add__(self, other: Point):
         return Point(self.x + other.x, self.y + other.y)
 
